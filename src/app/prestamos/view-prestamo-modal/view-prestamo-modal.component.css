@@ -1,0 +1,95 @@
+.modal-header {
+  border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+  padding: 0 0 10px 0;
+}
+
+.modal-title {
+  color: #333;
+  font-weight: 600;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  padding: 0;
+  line-height: 1;
+}
+
+.close-button:hover {
+  color: #dc3545;
+}
+
+.modal-body {
+  padding: 20px 0;
+}
+
+.detail-group {
+  display: grid;
+  gap: 15px;
+}
+
+.detail-item {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-item label {
+  font-weight: 700;
+  color: #000000;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+  text-align: left;
+}
+
+.detail-item span {
+  color: #666;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.badge-info {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(220, 53, 69, 0.2);
+  padding: 15px 0 0 0;
+}
+
+.btn {
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+} 
