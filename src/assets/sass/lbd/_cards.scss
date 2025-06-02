@@ -1,8 +1,10 @@
 .card{
     border-radius: $border-radius-base;
-    box-shadow: 0 1px 2px rgba(0,0,0,.05),0 0 0 1px rgba(63,63,68,.1);
-    background-color: #FFFFFF;
-    margin-bottom: 30px;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    background-color: #FFFFFF !important;
+    margin-bottom: 20px;
+    border: none;
+    padding: 20px;
         
     .image{
         width: 100%;
@@ -45,9 +47,11 @@
     }
     .content{
         padding: 15px 15px 10px 15px;
+        background-color: #FFFFFF !important;
     }
     .header{
         padding: 15px 15px 0;
+        background-color: #FFFFFF !important;
     }
     .category,
     label{
@@ -85,7 +89,7 @@
     }
     .footer{
         padding: 0;
-        background-color: $transparent-bg;
+        background-color: #FFFFFF !important;
         line-height: 30px;
         
         .legend{
@@ -153,6 +157,8 @@
     }
 }
 .card-user{
+    background-color: #FFFFFF !important;
+    
     .image{
         height: 110px;
     }
@@ -181,6 +187,7 @@
     }
     .content{
         min-height: 240px;
+        background-color: #FFFFFF !important;
     }
 }
 
@@ -194,9 +201,9 @@
     }
 }
 .card-plain{
-    background-color: transparent;
-    box-shadow: none;
-    border-radius: 0;
+    background-color: #FFFFFF !important;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    border-radius: $border-radius-base;
     
     .image{
         border-radius: 4px;
