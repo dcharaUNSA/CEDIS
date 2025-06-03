@@ -6,17 +6,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./confirm-action-modal.component.css']
 })
 export class ConfirmActionModalComponent {
-  @Input() title: string = 'Confirmar acción';
-  @Input() message: string = '¿Está seguro de realizar esta acción?';
-  @Output() close = new EventEmitter<void>();
-  @Output() confirm = new EventEmitter<void>();
+  @Input() title: string = '';
+  @Input() message: string = '';
+  @Input() confirmButtonText: string = 'Confirmar';
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() confirmAction = new EventEmitter<void>();
 
-  onClose(): void {
-    this.close.emit();
+  onSubmit(): void {
+    this.confirmAction.emit();
   }
 
-  onConfirm(): void {
-    this.confirm.emit();
-    this.close.emit();
+  onClose(): void {
+    this.closeModal.emit();
   }
 } 

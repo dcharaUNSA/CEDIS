@@ -7,8 +7,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./register-prestamo-modal.component.css']
 })
 export class RegisterPrestamoModalComponent {
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<any>();
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() savePrestamo = new EventEmitter<any>();
 
   prestamoForm: FormGroup;
   categories = [
@@ -21,20 +21,22 @@ export class RegisterPrestamoModalComponent {
   constructor(private fb: FormBuilder) {
     this.prestamoForm = this.fb.group({
       lector: ['', Validators.required],
+      lectorId: ['', Validators.required],
       bibliografia: ['', Validators.required],
+      bibliografiaId: ['', Validators.required],
       fechaSolicitud: [new Date(), Validators.required],
-      estado: ['Activo', Validators.required]
+      estado: ['Vigente', Validators.required]
     });
   }
 
   onClose(): void {
-    this.close.emit();
+    this.closeModal.emit();
   }
 
   onSave(): void {
     if (this.prestamoForm.valid) {
-      this.save.emit(this.prestamoForm.value);
-      this.close.emit();
+      this.savePrestamo.emit(this.prestamoForm.value);
+      this.closeModal.emit();
     }
   }
 } 

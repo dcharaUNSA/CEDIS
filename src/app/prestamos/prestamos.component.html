@@ -1,6 +1,7 @@
 <div class="content">
   <div class="container-fluid">
-    <div class="row">      
+    <div class="row">
+      <div class="col-md-12">  
         <!-- Título principal fuera del card -->
         <div class="page-title-section mb-4">
           <h4 class="page-title">Préstamos</h4>
@@ -12,51 +13,53 @@
             <div class="filters-section mb-4">
               <h5 class="filters-title">Filtros</h5>
               <div class="row">
-                <!-- Buscar por título o ID -->
+                <!-- Búsqueda por lector o bibliografía -->
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label for="searchInput">Buscar por título o ID</label>
+                    <label for="searchInput">Buscar por lector o bibliografía</label>
                     <div class="search-input-container">
                       <input 
                         type="text" 
                         class="form-control search-input" 
                         id="searchInput" 
-                        placeholder="Ingrese título o ID"
+                        placeholder="Ingrese lector o bibliografía"
                         [(ngModel)]="searchTerm"
-                        (input)="applyFilters()">
+                        (keyup.enter)="onSearch()">
                       <button 
                         class="search-button" 
-                        (click)="applyFilters()">
+                        (click)="onSearch()">
                         <i class="pe-7s-search"></i>
                       </button>
                     </div>
                   </div>
                 </div>
-
-                <!-- Fecha de publicación -->
+                
+                <!-- Fecha de solicitud -->
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label for="publicationDate">Fecha de solicitud</label>
+                    <label for="fechaSolicitud">Fecha de solicitud</label>
                     <input 
                       type="date" 
                       class="form-control" 
-                      id="publicationDate"
-                      [(ngModel)]="publicationDate"
-                      (change)="applyFilters()">
+                      id="fechaSolicitud"
+                      [(ngModel)]="fechaSolicitud"
+                      (change)="onFilterChange()">
                   </div>
                 </div>
-
-                <!-- Categoría -->
+                
+                <!-- Estado -->
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label for="category">Estado</label>
+                    <label for="estado">Estado</label>
                     <select 
                       class="form-control" 
-                      id="category"
-                      [(ngModel)]="category"
-                      (change)="applyFilters()">
+                      id="estado"
+                      [(ngModel)]="selectedEstado"
+                      (change)="onFilterChange()">
                       <option value="">Todos los estados</option>
-                      <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+                      <option *ngFor="let estado of estados" [value]="estado">
+                        {{estado}}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -64,7 +67,7 @@
             </div>
           </div>
         </div>
-
+          
         <div class="card">
           <div class="card-body">
             <!-- Título de la lista de préstamos -->
@@ -121,8 +124,14 @@
                     </td>
                     <td>{{i + 1}}</td>
                     <td>{{prestamo.fechaSolicitud | date:'dd/MM/yyyy'}}</td>
-                    <td>{{prestamo.lector}}</td>
-                    <td>{{prestamo.bibliografia}}</td>
+                    <td>
+                      {{prestamo.lector}}
+                      <div class="id-subtitle">ID: {{prestamo.lectorId}}</div>
+                    </td>
+                    <td>
+                      {{prestamo.bibliografia}}
+                      <div class="id-subtitle">ID: {{prestamo.bibliografiaId}}</div>
+                    </td>
                     <td>
                       <span [ngClass]="{
                         'badge': true,
@@ -135,13 +144,13 @@
                     </td>
                     <td>
                       <div class="btn-group">
-                        <button class="btn btn-sm btn-info" (click)="openViewModal(prestamo)" title="Ver">
+                        <button class="btn btn-sm btn-info" (click)="viewPrestamo(prestamo)" title="Ver">
                           <i class="pe-7s-look"></i>
                         </button>
-                        <button class="btn btn-sm btn-warning" (click)="openEditModal(prestamo)" title="Editar">
+                        <button class="btn btn-sm btn-warning" (click)="editPrestamo(prestamo)" title="Editar">
                           <i class="pe-7s-pen"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" (click)="openDeleteModal(prestamo)" title="Eliminar">
+                        <button class="btn btn-sm btn-danger" (click)="deletePrestamo(prestamo)" title="Eliminar">
                           <i class="pe-7s-trash"></i>
                         </button>
                       </div>
@@ -152,7 +161,8 @@
             </div>
           </div>
         </div>
-      </div>  
+      </div> 
+    </div> 
   </div>
 </div>
 

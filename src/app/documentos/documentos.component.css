@@ -286,3 +286,11 @@ select.form-control {
   color: #6c757d;
   opacity: 1;
 } 
+
+/* Estilos para los subtítulos de ID */
+.id-subtitle {
+  color: #dc3545;
+  font-size: 11px;
+  margin-top: 2px;
+  font-weight: 500;
+} 

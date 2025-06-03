@@ -7,9 +7,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ViewPrestamoModalComponent {
   @Input() prestamo: any;
-  @Output() close = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>();
 
   onClose(): void {
-    this.close.emit();
+    this.closeModal.emit();
   }
 } 

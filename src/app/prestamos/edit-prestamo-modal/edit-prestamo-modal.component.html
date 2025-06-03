@@ -25,9 +25,7 @@
     <div class="form-group">
       <label for="estado">Estado:</label>
       <select class="form-control" id="estado" formControlName="estado">
-        <option value="Activo">Activo</option>
-        <option value="Vencido">Vencido</option>
-        <option value="Devuelto">Devuelto</option>
+        <option *ngFor="let estado of estados" [value]="estado">{{estado}}</option>
       </select>
     </div>
   </form>

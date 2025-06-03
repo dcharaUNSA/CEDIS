@@ -15,6 +15,7 @@ interface Author {
 interface Document {
   id: number;
   title: string;
+  titleId: string;
   registrationDate: Date;
   publicationDate: Date;
   category: string;
@@ -54,11 +55,12 @@ export class DocumentosComponent implements OnInit {
     { id: 4, name: 'Ana Martínez', email: 'ana.martinez@example.com' }
   ];
 
-  // Lista de documentos
-  documents: Document[] = [
+  // Lista original de documentos
+  private originalDocuments: Document[] = [
     {
       id: 1,
       title: 'Sistema de Gestión Documental',
+      titleId: 'T-001',
       registrationDate: new Date('2024-03-15'),
       publicationDate: new Date('2024-03-20'),
       category: 'Tesis',
@@ -71,6 +73,7 @@ export class DocumentosComponent implements OnInit {
     {
       id: 2,
       title: 'Análisis de Requisitos',
+      titleId: 'T-002',
       registrationDate: new Date('2024-03-10'),
       publicationDate: new Date('2024-03-18'),
       category: 'Proyectos',
@@ -83,6 +86,7 @@ export class DocumentosComponent implements OnInit {
     {
       id: 3,
       title: 'Metodología de Desarrollo Ágil',
+      titleId: 'T-003',
       registrationDate: new Date('2024-03-05'),
       publicationDate: new Date('2024-03-15'),
       category: 'Artículos',
@@ -95,6 +99,7 @@ export class DocumentosComponent implements OnInit {
     {
       id: 4,
       title: 'Informe de Proyecto Final',
+      titleId: 'T-004',
       registrationDate: new Date('2024-03-01'),
       publicationDate: new Date('2024-03-12'),
       category: 'Informes',
@@ -107,6 +112,7 @@ export class DocumentosComponent implements OnInit {
     {
       id: 5,
       title: 'Manual de Usuario',
+      titleId: 'T-005',
       registrationDate: new Date('2024-02-28'),
       publicationDate: new Date('2024-03-10'),
       category: 'Otros',
@@ -117,6 +123,9 @@ export class DocumentosComponent implements OnInit {
       status: 'En revisión'
     }
   ];
+
+  // Lista filtrada de documentos
+  documents: Document[] = [];
 
   // Documento seleccionado para edición
   selectedDocument: Document | null = null;
@@ -133,32 +142,54 @@ export class DocumentosComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.applyFilters();
   }
 
-  // Método para manejar la búsqueda
-  onSearch(): void {
-    if (!this.searchTerm.trim()) {
-      return;
+  // Función para normalizar texto (eliminar tildes y caracteres especiales)
+  private normalizeText(text: string): string {
+    return text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Eliminar tildes
+      .replace(/[^a-z0-9\s]/g, '') // Eliminar caracteres especiales
+      .replace(/\s+/g, ' ') // Reemplazar múltiples espacios por uno solo
+      .trim();
+  }
+
+  // Método para aplicar todos los filtros
+  private applyFilters(): void {
+    let filteredDocs = [...this.originalDocuments];
+
+    // Aplicar filtro de búsqueda
+    if (this.searchTerm.trim()) {
+      const searchTerms = this.normalizeText(this.searchTerm).split(' ');
+      
+      filteredDocs = filteredDocs.filter(doc => {
+        const normalizedTitle = this.normalizeText(doc.title);
+        const normalizedTitleId = this.normalizeText(doc.titleId);
+        
+        // Verificar si todos los términos de búsqueda están presentes
+        return searchTerms.every(term => 
+          normalizedTitle.includes(term) || 
+          normalizedTitleId.includes(term)
+        );
+      });
     }
-    
-    const searchTermLower = this.searchTerm.toLowerCase();
-    this.documents = this.documents.filter(doc => 
-      doc.title.toLowerCase().includes(searchTermLower) ||
-      doc.id.toString().includes(searchTermLower)
-    );
-  }
 
-  // Método para manejar cambios en los filtros
-  onFilterChange(): void {
-    let filteredDocs = [...this.documents];
-
+    // Aplicar filtro de fecha
     if (this.publicationDate) {
       const filterDate = new Date(this.publicationDate);
-      filteredDocs = filteredDocs.filter(doc => 
-        doc.publicationDate.toDateString() === filterDate.toDateString()
-      );
+      // Establecer la hora a 00:00:00 para comparar solo fechas
+      filterDate.setHours(0, 0, 0, 0);
+      
+      filteredDocs = filteredDocs.filter(doc => {
+        const docDate = new Date(doc.publicationDate);
+        docDate.setHours(0, 0, 0, 0);
+        return docDate >= filterDate;
+      });
     }
 
+    // Aplicar filtro de categoría
     if (this.selectedCategory) {
       filteredDocs = filteredDocs.filter(doc => 
         doc.category === this.selectedCategory
@@ -166,6 +197,16 @@ export class DocumentosComponent implements OnInit {
     }
 
     this.documents = filteredDocs;
+  }
+
+  // Método para manejar la búsqueda
+  onSearch(): void {
+    this.applyFilters();
+  }
+
+  // Método para manejar cambios en los filtros
+  onFilterChange(): void {
+    this.applyFilters();
   }
 
   // Método para seleccionar/deseleccionar todos los documentos
@@ -189,7 +230,8 @@ export class DocumentosComponent implements OnInit {
   // Método para eliminar un documento
   deleteDocument(doc: Document): void {
     if (confirm(`¿Está seguro de eliminar el documento "${doc.title}"?`)) {
-      this.documents = this.documents.filter(d => d.id !== doc.id);
+      this.originalDocuments = this.originalDocuments.filter(d => d.id !== doc.id);
+      this.applyFilters();
       console.log('Documento eliminado:', doc);
     }
   }
@@ -197,9 +239,10 @@ export class DocumentosComponent implements OnInit {
   // Método para guardar los cambios de edición
   saveDocument(): void {
     if (this.selectedDocument) {
-      const index = this.documents.findIndex(d => d.id === this.selectedDocument?.id);
+      const index = this.originalDocuments.findIndex(d => d.id === this.selectedDocument?.id);
       if (index !== -1) {
-        this.documents[index] = { ...this.selectedDocument };
+        this.originalDocuments[index] = { ...this.selectedDocument };
+        this.applyFilters();
       }
       this.isEditing = false;
       this.selectedDocument = null;
@@ -233,7 +276,8 @@ export class DocumentosComponent implements OnInit {
 
   onConfirmDelete(): void {
     const selectedDocs = this.getSelectedDocuments();
-    this.documents = this.documents.filter(doc => !doc.selected);
+    this.originalDocuments = this.originalDocuments.filter(doc => !doc.selected);
+    this.applyFilters();
     console.log('Documentos eliminados:', selectedDocs);
     this.showDeleteConfirmModal = false;
   }
@@ -249,8 +293,9 @@ export class DocumentosComponent implements OnInit {
 
   onSaveDocument(documentData: any): void {
     const newDocument: Document = {
-      id: this.documents.length + 1,
+      id: this.originalDocuments.length + 1,
       title: documentData.title,
+      titleId: documentData.titleId,
       registrationDate: new Date(),
       publicationDate: new Date(documentData.publicationDate),
       category: documentData.category,
@@ -261,7 +306,8 @@ export class DocumentosComponent implements OnInit {
       status: 'Nuevo'
     };
 
-    this.documents.unshift(newDocument);
+    this.originalDocuments.unshift(newDocument);
+    this.applyFilters();
     this.showRegisterModal = false;
   }
 
@@ -316,9 +362,10 @@ export class DocumentosComponent implements OnInit {
   }
 
   onSaveEditDocument(updatedDoc: Document): void {
-    const index = this.documents.findIndex(d => d.id === updatedDoc.id);
+    const index = this.originalDocuments.findIndex(d => d.id === updatedDoc.id);
     if (index !== -1) {
-      this.documents[index] = { ...updatedDoc };
+      this.originalDocuments[index] = { ...updatedDoc };
+      this.applyFilters();
     }
     this.showEditModal = false;
     this.documentToEdit = null;
